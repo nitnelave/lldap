@@ -14,6 +14,8 @@ pub enum Users {
     FirstName,
     LastName,
     Avatar,
+    SshPubKey,
+    WireguardPubKey,
     CreationDate,
     PasswordHash,
     TotpSecret,
@@ -52,6 +54,8 @@ pub async fn init_table(pool: &Pool) -> sqlx::Result<()> {
             .col(ColumnDef::new(Users::DisplayName).string_len(255))
             .col(ColumnDef::new(Users::FirstName).string_len(255))
             .col(ColumnDef::new(Users::LastName).string_len(255))
+            .col(ColumnDef::new(Users::SshPubKey).string_len(768))
+            .col(ColumnDef::new(Users::WireguardPubKey).string_len(255))
             .col(ColumnDef::new(Users::Avatar).binary())
             .col(ColumnDef::new(Users::CreationDate).date_time().not_null())
             .col(
@@ -130,8 +134,8 @@ mod tests {
         let sql_pool = PoolOptions::new().connect("sqlite::memory:").await.unwrap();
         init_table(&sql_pool).await.unwrap();
         sqlx::query(r#"INSERT INTO users
-      (user_id, email, display_name, first_name, last_name, creation_date, password_hash)
-      VALUES ("bôb", "böb@bob.bob", "Bob Bobbersön", "Bob", "Bobberson", "1970-01-01 00:00:00", "bob00")"#).execute(&sql_pool).await.unwrap();
+      (user_id, email, display_name, first_name, last_name, ssh_pub_key, wireguard_pub_key, creation_date, password_hash)
+      VALUES ("bôb", "böb@bob.bob", "Bob Bobbersön", "Bob", "Bobberson", "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCpGRD9/jaGg/aM4jbbumjqnIUT+wtyaeb2Z27AZUlsAo+4GdDGkxC0LnLSuLqQleoMWcVG6RvJrTsa5NWQwNJmnX4rS7bJ+6qZibXHhfyA5Kr6JybWZr4/mrPPKgBaio6kPEqKkfEzhrygpeXcNvxp847gu+Hn7IbI6eBr0sLfy/bJPkpzhyhSSt/kA5drLJvxdA9aNPv3Jr0kJQtlceH4f7334LH9EE18xy8dEX/w0iefFSEC8rXoV7svqINOQKULIhi14ibAX9a4ks9TjKXqEDrJWQe0gf6qNEQ2wS8j5d47mdKnxPG0d592FHO86LlGiIpWkJt2WmoNmJHnwR1LrUsJK6T3tgjZyL+plcnS9OlBDD74dA1DQSpXaGkcLADNui9+cA/T1nacrzR9V8BN6HIBmvtqaI0CKz9lbScJVkNpkmxKraj/TgcWNpSWKDOuo8kdQKOeGcsxcK9PtpoCB/+dHe5gCf7/QHY1BIoyrsM/sOi0f2+f9zHDg1OIh6U= test@example", "e1ofBntxh2mj8kvdfODOL19xJyqVczDybDQuJ3sW30o=", "1970-01-01 00:00:00", "bob00")"#).execute(&sql_pool).await.unwrap();
         let row =
             sqlx::query(r#"SELECT display_name, creation_date FROM users WHERE user_id = "bôb""#)
                 .fetch_one(&sql_pool)

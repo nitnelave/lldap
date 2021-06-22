@@ -75,6 +75,8 @@ impl Component for UserTable {
                                 <td>{&u.display_name.as_ref().unwrap_or(&String::new())}</td>
                                 <td>{&u.first_name.as_ref().unwrap_or(&String::new())}</td>
                                 <td>{&u.last_name.as_ref().unwrap_or(&String::new())}</td>
+                                <td>{&u.ssh_pub_key.as_ref().unwrap_or(&String::new())}</td>
+                                <td>{&u.wireguard_pub_key.as_ref().unwrap_or(&String::new())}</td>
                                 <td>{&u.creation_date}</td>
                             </tr>
                         }
@@ -88,6 +90,8 @@ impl Component for UserTable {
                         <th>{"Display name"}</th>
                         <th>{"First name"}</th>
                         <th>{"Last name"}</th>
+                        <th>{"SSH Public Key"}</th>
+                        <th>{"Wireguard Public Key"}</th>
                         <th>{"Creation date"}</th>
                       </tr>
                       {table_content}

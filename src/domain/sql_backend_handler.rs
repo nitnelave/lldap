@@ -108,6 +108,8 @@ impl BackendHandler for SqlBackendHandler {
                 .column(Users::DisplayName)
                 .column(Users::FirstName)
                 .column(Users::LastName)
+                .column(Users::SshPubKey)
+                .column(Users::WireguardPubKey)
                 .column(Users::Avatar)
                 .column(Users::CreationDate)
                 .from(Users::Table)
@@ -226,6 +228,8 @@ impl BackendHandler for SqlBackendHandler {
                 Users::DisplayName,
                 Users::FirstName,
                 Users::LastName,
+                Users::SshPubKey,
+                Users::WireguardPubKey,
                 Users::CreationDate,
                 Users::PasswordHash,
             ])
@@ -235,6 +239,11 @@ impl BackendHandler for SqlBackendHandler {
                 request.display_name.map(Into::into).unwrap_or(Value::Null),
                 request.first_name.map(Into::into).unwrap_or(Value::Null),
                 request.last_name.map(Into::into).unwrap_or(Value::Null),
+                request.ssh_pub_key.map(Into::into).unwrap_or(Value::Null),
+                request
+                    .wireguard_pub_key
+                    .map(Into::into)
+                    .unwrap_or(Value::Null),
                 chrono::Utc::now().naive_utc().into(),
                 password_hash.into(),
             ])

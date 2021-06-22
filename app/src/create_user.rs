@@ -67,6 +67,8 @@ impl Component for CreateUserForm {
                     display_name: Some(get_element("displayname")),
                     first_name: Some(get_element("firstname")),
                     last_name: Some(get_element("lastname")),
+                    ssh_pub_key: Some(get_element("ssh_pub_key")),
+                    wireguard_pub_key: Some(get_element("wireguard_pub_key")),
                     password: get_element("password"),
                 };
                 self.create_user(req);
@@ -110,6 +112,14 @@ impl Component for CreateUserForm {
                 <div>
                     <label for="lastname">{"Last name:"}</label>
                     <input type="text" id="lastname" />
+                </div>
+                <div>
+                    <label for="ssh_pub_key">{"SSH Public Key:"}</label>
+                    <input type="text" id="ssh_pub_key" />
+                </div>
+                <div>
+                    <label for="wireguard_pub_key">{"Wireguard Public Key:"}</label>
+                    <input type="text" id="wireguard_pub_key" />
                 </div>
                 <div>
                     <label for="password">{"Password:"}</label>

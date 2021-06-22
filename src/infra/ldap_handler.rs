@@ -75,6 +75,11 @@ fn get_attribute(user: &User, attribute: &str) -> Result<Vec<String>> {
             .display_name
             .clone()
             .unwrap_or_else(|| user.user_id.clone())]),
+        "sshPubKey" => Ok(vec![user.ssh_pub_key.clone().unwrap_or("".to_string())]),
+        "wireguardPubKey" => Ok(vec![user
+            .wireguard_pub_key
+            .clone()
+            .unwrap_or("".to_string())]),
         _ => bail!("Unsupported attribute: {}", attribute),
     }
 }
@@ -124,6 +129,10 @@ fn map_field(field: &str) -> Result<String> {
         "last_name".to_string()
     } else if field == "avatar" {
         "avatar".to_string()
+    } else if field == "sshPubKey" {
+        "ssh_pub_key".to_string()
+    } else if field == "wireguardPubKey" {
+        "wireguard_pub_key".to_string()
     } else if field == "creationDate" {
         "creation_date".to_string()
     } else {
@@ -512,6 +521,8 @@ mod tests {
                 "givenName".to_string(),
                 "sn".to_string(),
                 "cn".to_string(),
+                "sshPubkey".to_string(),
+                "wireguardPubKey".to_string(),
             ],
         };
         assert_eq!(
@@ -548,6 +559,14 @@ mod tests {
                             atype: "cn".to_string(),
                             vals: vec!["Bôb Böbberson".to_string()]
                         }
+                        LdapPartialAttribute {
+                            atype: "sshPubKey".to_string(),
+                            vals: vec!["ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCpGRD9/jaGg/aM4jbbumjqnIUT+wtyaeb2Z27AZUlsAo+4GdDGkxC0LnLSuLqQleoMWcVG6RvJrTsa5NWQwNJmnX4rS7bJ+6qZibXHhfyA5Kr6JybWZr4/mrPPKgBaio6kPEqKkfEzhrygpeXcNvxp847gu+Hn7IbI6eBr0sLfy/bJPkpzhyhSSt/kA5drLJvxdA9aNPv3Jr0kJQtlceH4f7334LH9EE18xy8dEX/w0iefFSEC8rXoV7svqINOQKULIhi14ibAX9a4ks9TjKXqEDrJWQe0gf6qNEQ2wS8j5d47mdKnxPG0d592FHO86LlGiIpWkJt2WmoNmJHnwR1LrUsJK6T3tgjZyL+plcnS9OlBDD74dA1DQSpXaGkcLADNui9+cA/T1nacrzR9V8BN6HIBmvtqaI0CKz9lbScJVkNpkmxKraj/TgcWNpSWKDOuo8kdQKOeGcsxcK9PtpoCB/+dHe5gCf7/QHY1BIoyrsM/sOi0f2+f9zHDg1OIh6U= test@example".to_string()]
+                        }
+                        LdapPartialAttribute {
+                            atype: "wireguardPubKey".to_string(),
+                            vals: vec!["e1ofBntxh2mj8kvdfODOL19xJyqVczDybDQuJ3sW30o=".to_string()]
+                        }
                     ],
                 }),
                 request.gen_result_entry(LdapSearchResultEntry {
@@ -581,6 +600,15 @@ mod tests {
                             atype: "cn".to_string(),
                             vals: vec!["Jimminy Cricket".to_string()]
                         }
+                        LdapPartialAttribute {
+                            atype: "sshPubKey".to_string(),
+                            vals: vec!["ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCpGRD9/jaGg/aM4jbbumjqnIUT+wtyaeb2Z27AZUlsAo+4GdDGkxC0LnLSuLqQleoMWcVG6RvJrTsa5NWQwNJmnX4rS7bJ+6qZibXHhfyA5Kr6JybWZr4/mrPPKgBaio6kPEqKkfEzhrygpeXcNvxp847gu+Hn7IbI6eBr0sLfy/bJPkpzhyhSSt/kA5drLJvxdA9aNPv3Jr0kJQtlceH4f7334LH9EE18xy8dEX/w0iefFSEC8rXoV7svqINOQKULIhi14ibAX9a4ks9TjKXqEDrJWQe0gf6qNEQ2wS8j5d47mdKnxPG0d592FHO86LlGiIpWkJt2WmoNmJHnwR1LrUsJK6T3tgjZyL+plcnS9OlBDD74dA1DQSpXaGkcLADNui9+cA/T1nacrzR9V8BN6HIBmvtqaI0CKz9lbScJVkNpkmxKraj/TgcWNpSWKDOuo8kdQKOeGcsxcK9PtpoCB/+dHe5gCf7/QHY1BIoyrsM/sOi0f2+f9zHDg1OIh6U= test@example".to_string()]
+                        }
+                        LdapPartialAttribute {
+                            atype: "wireguardPubKey".to_string(),
+                            vals: vec!["e1ofBntxh2mj8kvdfODOL19xJyqVczDybDQuJ3sW30o=".to_string()]
+                        }
+
                     ],
                 }),
                 request.gen_success()
